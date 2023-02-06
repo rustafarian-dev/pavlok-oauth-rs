@@ -23,6 +23,8 @@ pub struct TokenInfo {
     pub access_token: String,
 }
 
+type Error = &'static str;
+
 impl Oauth {
     pub fn new(client_id:String, client_secret: String, redirect_uri: String) -> Oauth {
         Oauth {
@@ -44,7 +46,7 @@ impl Oauth {
         )
     }
 
-    pub async fn get_token(&self, code: &str) -> Result<TokenInfo, &'static str> {
+    pub async fn get_token(&self, code: &str) -> Result<TokenInfo, Error> {
         let token_request = GetTokenRequest {
             client_secret: self.client_secret.as_str(),
             client_id: self.client_id.as_str(),
@@ -57,8 +59,14 @@ impl Oauth {
         .post(format!("{}/{}", BASE_URL, "oauth/token"))
         .json(&token_request)
         .send().await
-        .map_err(|_| "Bad")?
+        .map_err(|e| {
+            println!("Error: {}", e);
+            "sending error"
+        })?
         .json::<TokenInfo>().await
-        .map_err(|_| "Bad")
+        .map_err(|e| {
+            println!("Error: {}", e);
+            "json"
+        })
     }
 }
