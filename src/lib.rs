@@ -55,18 +55,19 @@ impl Oauth {
             redirect_uri: self.redirect_uri.as_str(),
         };
 
-        self.client
+        let res = self.client
         .post(format!("{}/{}", BASE_URL, "oauth/token"))
         .json(&token_request)
-        .send().await
-        .map_err(|e| {
-            println!("Error: {}", e);
-            "sending error"
-        })?
-        .json::<TokenInfo>().await
-        .map_err(|e| {
-            println!("Error: {}", e);
-            "json"
-        })
+        .send().await;
+
+        let text = res.map_err(|e| {
+            "recieving error"
+        })?.text().await;
+
+        let data = text.map_err(|_| "recieving error 2")?;
+
+        println!("JSON: {}\n", data);
+
+        Ok(serde_json::from_str(&data).map_err(|_| "json")?)
     }
 }
