@@ -51,7 +51,7 @@ impl Oauth {
             client_secret: self.client_secret.as_str(),
             client_id: self.client_id.as_str(),
             code,
-            grant_type: "authorize_code",
+            grant_type: "authorization_code",
             redirect_uri: self.redirect_uri.as_str(),
         };
 
