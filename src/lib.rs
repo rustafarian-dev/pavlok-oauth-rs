@@ -20,7 +20,7 @@ struct GetTokenRequest<'a> {
 
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
 pub struct TokenInfo {
-    access_token: String,
+    pub access_token: String,
 }
 
 impl Oauth {
