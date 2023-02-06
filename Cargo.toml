@@ -1,6 +1,6 @@
 [package]
 name = "pavlok-oauth"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2021"
 repository = "https://github.com/rustafarian-dev/pavlok-oauth-rs"
 description = "A library for Pavlok OAuth."

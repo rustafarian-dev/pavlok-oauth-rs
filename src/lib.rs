@@ -1,7 +1,5 @@
-use reqwest;
-use serde;
 
-const BASE_URL: &'static str = "https://app.pavlok.com/";
+const BASE_URL: &str = "https://app.pavlok.com/";
 
 #[derive(Debug, Clone)]
 pub struct Oauth {
@@ -27,11 +25,11 @@ pub struct TokenInfo {
 
 impl Oauth {
     pub fn new(client_id:String, client_secret: String, redirect_uri: String) -> Oauth {
-        return Oauth {
-            client_secret: client_secret,
-            client_id: client_id,
+        Oauth {
+            client_secret,
+            client_id,
+            redirect_uri,
             client: reqwest::Client::new(),
-            redirect_uri: redirect_uri,
         }
     }
 
@@ -47,22 +45,20 @@ impl Oauth {
     }
 
     pub async fn get_token(&self, code: &str) -> Result<TokenInfo, &'static str> {
-        let tokenRequest = GetTokenRequest {
+        let token_request = GetTokenRequest {
             client_secret: self.client_secret.as_str(),
             client_id: self.client_id.as_str(),
-            code: code,
+            code,
             grant_type: "authorize_code",
             redirect_uri: self.redirect_uri.as_str(),
         };
 
-        Ok(
-            self.client
-            .post(format!("{}/{}", BASE_URL, "oauth/token"))
-            .json(&tokenRequest)
-            .send().await
-            .map_err(|err| "Bad")?
-            .json::<TokenInfo>().await
-            .map_err(|err| "Bad")?
-        )
+        self.client
+        .post(format!("{}/{}", BASE_URL, "oauth/token"))
+        .json(&token_request)
+        .send().await
+        .map_err(|_| "Bad")?
+        .json::<TokenInfo>().await
+        .map_err(|_| "Bad")
     }
 }
