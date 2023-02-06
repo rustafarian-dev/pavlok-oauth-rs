@@ -3,7 +3,7 @@ use serde;
 
 const BASE_URL: &'static str = "https://app.pavlok.com/";
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Oauth {
     client: reqwest::Client,
     client_id: String,
