@@ -33,7 +33,7 @@ impl Oauth {
         }
     }
 
-    pub fn redirect_uri(&self) -> Result<url::Url, url::ParseError> {
+    pub fn pavlok_redirect_uri(&self) -> Result<url::Url, url::ParseError> {
         url::Url::parse_with_params(
             &format!("{}/{}", BASE_URL, "oauth/authorize"),
             &[
